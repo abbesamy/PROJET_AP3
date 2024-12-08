@@ -3,8 +3,12 @@
 #load "b_trees.cmo";;*)
 open B_trees;;
 
+(** type for a binary search tree implemented with the module B_trees *)
 type 'a bst = 'a B_trees.b_trees;;
 
+
+(** checks the presence of a  value in a bst *)
+(** THIS FUNCTION CHECHKS IF AN ELEMENT 'v' IS PRESENT IN A BST 'abr' (RETURNS TRUE) OR NOT (RETURNS FALSE) *)
 let rec bst_seek(abr, v : 'a bst * 'a) : bool =
   if bt_isemptys(abr)
   then false
@@ -18,6 +22,9 @@ let rec bst_seek(abr, v : 'a bst * 'a) : bool =
       else bst_seek(bt_rights(abr), v)
 ;;
 
+
+(** insertion of a value *)
+(** THIS FUNCTIONS INSERTS AN ELEMENT 'v' IN A BST 't' *)
 let rec bst_linsert(v, t : 'a * 'a bst) : 'a bst =
   if bt_isemptys(t)
   then bt_rootings(v, bt_emptys(), bt_emptys())
@@ -32,6 +39,8 @@ let rec bst_linsert(v, t : 'a * 'a bst) : 'a bst =
 ;;
 
 
+(** auxiliary function for bst_lbuild *)
+(** USED FOR THE INSERTION OF EACH ELEMENT OF A LIST 'l' IN A BST 'abr' *)
 let rec bst_lbuild_aux(l, abr : 'a list * 'a bst) : 'a bst =
   if l = []
   then abr
@@ -41,6 +50,8 @@ let rec bst_lbuild_aux(l, abr : 'a list * 'a bst) : 'a bst =
 ;;
 
 
+(** BST Building *)
+(** THIS FUNCTION BUILD A BST FROM A LIST 'l' OF ELEMENTS *)
 let bst_lbuild(l : 'a list) : 'a bst =
   if l = []
   then bt_emptys()
@@ -48,6 +59,8 @@ let bst_lbuild(l : 'a list) : 'a bst =
 ;;
 
 
+(** the max of a bst *)
+(** THIS FUNCTION RETURNS THE MAX OF BST 't' *)
 let rec bst_max(t : 'a bst) : 'a =
   if bt_isemptys(t) then failwith "error : no max in empty tree"
   else if bt_isemptys(bt_rights(t)) then bt_roots(t)
@@ -55,6 +68,8 @@ let rec bst_max(t : 'a bst) : 'a =
 ;;
 
 
+(** the deletion of an element*)
+(** THIS FUNCTIONS DELETES AN ELEMENT 'v' FROM A BST 't' *)
 let rec bst_delete(v, t : 'a * 'a bst) : 'a bst =
   if bt_isemptys(t) then failwith "error : empty bst !"
   else let r : 'a = bt_roots(t) in
@@ -72,6 +87,8 @@ let rec bst_delete(v, t : 'a * 'a bst) : 'a bst =
 ;;
 
 
+(** auxiliary function for bst_to_list *)
+(** THIS FUNCTION ADD EACH LEAF OF BST 'abr' INTO AN ASCENDING ORDERED LIST 'l' *)
 let rec bst_to_list_aux(abr, l : 'a bst * 'a list) : 'a list =
   if bt_isemptys(abr) then l
   else
@@ -82,6 +99,8 @@ let rec bst_to_list_aux(abr, l : 'a bst * 'a list) : 'a list =
 ;;
 
 
+(** List building from a BST *)
+(** THIS FUNCTION BUILD A LIST FROME A BST 'abr' *)
 let bst_to_list(abr : 'a bst) : 'a list =
     if bt_isemptys(abr) then []
     else
@@ -89,6 +108,8 @@ let bst_to_list(abr : 'a bst) : 'a list =
 ;;
 
 
+(** BST cutting *)
+(** THIS FUNCTION CUTS A BST 'abr' FROM ONE OF HIS ELEMENTS 'v' *)
 let rec bst_cut (abr, v : 'a bst * 'a) : 'a bst * 'a bst =
     if bt_isemptys(abr) then (bt_emptys(), bt_emptys())
     else
@@ -102,18 +123,17 @@ let rec bst_cut (abr, v : 'a bst * 'a) : 'a bst * 'a bst =
         (bt_rootings(bt_roots(abr), bt_lefts(abr), g), d)
 ;;
 
+
+(** root insertion *)
+(** THIS FUNCTION ADDS AN ELEMENT 'elem' TO A BST 'abr' AS A ROOT *)
 let bst_rinsert(abr, elem : 'a bst * 'a) : 'a bst =
   let (lg, ld : 'a bst * 'a bst) = bst_cut(abr, elem) in
   bt_rootings(elem, lg, ld)
 ;;
 
-let rec bst_to_string(abr : 'a bst ) : string =
-   if bt_isemptys(abr)
-   then "a_vide()"
-   else " (" ^ string_of_int(bt_roots(abr)) ^ ", " ^ bst_to_string(bt_lefts(abr)) ^ ", " ^ bst_to_string(bt_rights(abr)) ^ ") "
-;;
 
-
+(** BST check *)
+(** THIS FUNCTION CHECKS IF A TREE 'bst' IS A BST OR NOT *)
 let rec bst_isBst(bst : 'a bst) : bool =
   if (bt_isemptys(bst))
   then true
@@ -128,5 +148,3 @@ let rec bst_isBst(bst : 'a bst) : bool =
         else
          (r > bt_roots(bt_lefts(bst)) && bst_isBst(bt_lefts(bst)) && r < bt_roots(bt_rights(bst)) && bst_isBst(bt_rights(bst)))
 ;;
-
-

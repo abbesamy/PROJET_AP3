@@ -1,0 +1,8 @@
+#directory "../utils";;
+
+#load "b_trees.cmo";;
+open B_trees;;
+
+
+Random.self_init;;
+
