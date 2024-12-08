@@ -1,7 +1,7 @@
 (*#directory "../utils";;
 
-#load "b_trees.cmo";;*)
-open B_trees;;
+#load "bst.cmo";;*)
+open Bst;;
 
 (* Définition du type my_t comme étant un entier *)
 type my_t = int;;
@@ -27,7 +27,6 @@ let generate_rand_list (size: int) : my_t list =
 
 (* Crée un arbre binaire de recherche à partir d'une liste générée aléatoirement. *)
 let bst_rnd_create(len: int): int bst =
-  Random.self_init();
   let new_list: int list = generate_rand_list(len) in
   bst_lbuild(new_list)
 ;;
