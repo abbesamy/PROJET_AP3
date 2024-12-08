@@ -1,6 +1,4 @@
-(*#directory "../utils";;
-
-#load "bst.cmo";;*)
+#load "../utils/bst.cmo";;
 open Bst;;
 
 (* Définition du type my_t comme étant un entier *)
@@ -30,3 +28,7 @@ let bst_rnd_create(len: int): int bst =
   let new_list: int list = generate_rand_list(len) in
   bst_lbuild(new_list)
 ;;
+
+let new_bst: 'a bst = bst_rnd_create(5);;
+
+btree_to_string(new_bst);;
