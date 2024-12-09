@@ -80,7 +80,7 @@ else (1 + max(height(bt_lefts(bt)), height(bt_rights(bt))))
 
 (** The display of a binary tree *)
 (** THIS FUNCTION DISPLAYS A BINARY TREE 'bt' IN THE FORM OF A STRING *)
-let rec btree_to_string(bt : 'a b_trees) : string =
+let rec btree_to_string(bt : int b_trees) : string =
 if bt_isemptys(bt)
 then "a_vide()"
 else " (" ^ string_of_int(bt_roots(bt)) ^ ", " ^ btree_to_string(bt_lefts(bt)) ^ ", " ^ btree_to_string(bt_rights(bt)) ^ ") "

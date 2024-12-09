@@ -9,11 +9,11 @@ type 'a bst = 'a B_trees.b_trees;;
 
 (** checks the presence of a  value in a bst *)
 (** THIS FUNCTION CHECHKS IF AN ELEMENT 'v' IS PRESENT IN A BST 'abr' (RETURNS TRUE) OR NOT (RETURNS FALSE) *)
-let rec bst_seek(abr, v : 'a bst * 'a) : bool =
+let rec bst_seek(abr, v : ('a * int) bst * 'a) : bool =
   if bt_isemptys(abr)
   then false
   else
-    let (x :'a) = bt_roots(abr) in
+    let (x, h :'a * int) = bt_roots(abr) in
     if (v = x)
     then true
     else

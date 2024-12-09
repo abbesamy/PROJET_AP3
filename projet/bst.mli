@@ -6,7 +6,7 @@ type 'a bst = 'a B_trees.b_trees
 
 
 (** checks the presence of a value in a bst *)
-val bst_seek : 'a bst * 'a -> bool
+val bst_seek : ('a * int) bst * 'a -> bool
 (** THIS FUNCTION CHECHKS IF AN ELEMENT IS PRESENT IN A BST (RETURNS TRUE) OR NOT (RETURNS FALSE) *)
 
 

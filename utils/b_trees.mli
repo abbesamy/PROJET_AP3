@@ -41,3 +41,7 @@ val max : 'a * 'a -> 'a
 (** the height of a binary tree *)
 val  height : 'a b_trees -> int
 (** THIS FUNCTION RETURNS THE HEIGHT OF A BINARY TREEE *)
+
+(** the display of a binary tree *)
+val btree_to_string : int b_trees -> string
+(** THIS FUNCTION DISPLAYS A BINARY TREE IN A FORM A A STRING *)

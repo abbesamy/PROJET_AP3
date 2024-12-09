@@ -1,4 +1,5 @@
-(*#directory "../utils";;
+(*#directory "../utils";;*)
 
-#load "b_trees.cmo";;*)
-open B_trees;;
+#load "bst.cmo";;
+open Bst;;
+
