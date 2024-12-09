@@ -14,8 +14,10 @@ type 'a avl = ('a * int) bst;;
 
 (** THIS FUNCTION RETURNS THE HEIGHT OF AN AVL 'avl' *)
 let avl_get_node_height(avl : 'a avl) : int =
-  let (rval,des : 'a * int) = bt_roots(avl) in
-  des
+  if bt_isemptys(avl) then 0
+  else
+    let (rval,des : 'a * int) = bt_roots(avl) in
+    des
 ;;
 
 (** THIS FUNCTION COMPUTES THE UNBALANCE OF AN AVL 'avl' *)
@@ -203,7 +205,7 @@ let rec avl_insert_val(v, avl : 'a * 'a avl) : 'a avl =
 
 (** THIS FUNCTION CHECKS IF AN ELEMENT WITH THE VALUE 'elem' IS PRESENT IN AN AVL 'avl' *)
 (** THE CODE OF THE FUNCTION BST_SEEK WAS ADAPTED  *)
-let rec seek_avl (elem, avl : 'a * 'a avl) : bool =
+let rec avl_seek (elem, avl : 'a * 'a avl) : bool =
   bst_seek(avl, elem)
 ;;
 
@@ -212,21 +214,54 @@ let rec seek_avl (elem, avl : 'a * 'a avl) : bool =
 
 (** ---------- PART 2 : RANDOM CREATIONS  --------------*)
 
+(** VARIABLE USED AS BOUND IN RAND.INT  *)
+let up_bound : int = 200;;
+
+(** INITIALISATION OF THE GENERATOR OF RANDOM INTs  *)
+Random.self_init;;
+
+
+(** THIS FUNCTION IS USED IN generate_rand_list TO GENERATE AN INT LIST OF SIZE 'size'  *)
+let rec generate_rand_list_aux(size, l : int * int list) : int list =
+  if size = 0
+  then l
+  else
+    let num : int = Random.int up_bound in
+    let newl : int list = num::l in
+    generate_rand_list_aux(size - 1, newl)
+;;
+
+(** THIS FUNCTION GENERATES AN INT LIST OF SIZE 'size' *)
+let generate_rand_list(size : int) : 'a list =
+ generate_rand_list_aux(size, [])
+;;
 
 
 
 (** AUXILLIARY FUNCTION USED TO CREATE AN AVL 't' FROM AN 'a LIST 'l'  *)
 let rec avl_rnd_create_aux(l, t : 'a list * 'a avl) : 'a avl =
   if l = []
-  then t
+  then avl_rebalance(t)
   else
     avl_rnd_create_aux(List.tl(l), avl_insert_val(List.hd(l), t))
 ;;
 
 (** THIS FUNCTION CREATES AN AVL FROM AN 'a LIST 'l' *)
-let avl_rnd_create(l : 'a list) : 'a avl =
+let avl_rnd_create(len : int) : 'a avl =
+  let l : int list = generate_rand_list(len) in
   let t : 'a avl = avl_rooting((List.hd(l), 0), bt_emptys(), bt_emptys()) in
-  avl_rnd_create_aux(l, t)
+  avl_rnd_create_aux(List.tl(l), t)
 ;;
+
+(** THIS FUNCTION DISPLAYS AN AVL 'avl' IN A FORM OF A STRING, IT IS USED FOR TESTING *)
+let rec avl_to_string(avl : 'a avl) : string =
+  if bt_isemptys(avl)
+  then "avl_vide()"
+  else
+    " ("^ "(" ^ string_of_int(avl_get_val_node(avl)) ^", " ^ string_of_int(avl_get_node_height(avl)) ^ " ) "^ ", " ^ avl_to_string(bt_lefts(avl)) ^ ", " ^ avl_to_string(bt_rights(avl)) ^ ") "
+;;
+
+
+(** WE TESTED AND TRACED THE FUNCTIONS avl_seek, avl_delete_val and avl_insert_val AND WE SAW THAT THE COMPLEXITY OF THE OPERATION IS INDEED IN LOG(n) WHERE n IS THE SIZE OF THE AVL *)
 
 

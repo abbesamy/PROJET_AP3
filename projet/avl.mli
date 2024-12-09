@@ -69,9 +69,20 @@ val seek_avl : 'a * 'a avl -> bool
 
 (**  --------------------- PART 2 : RANDOM CREATIONS----------------  *)
 
+(** THIS FUNCTION IS USED TO GENERATE AN INT LIST OF SIZE 'size'  *)
+
+(** THIS FUNCTION IS USED IN generate_rand_list TO GENERATE AN INT LIST *)
+val generate_rand_list_aux : int * int list -> int list
+
+(** THIS FUNCTION GENERATES AN INT LIST *)
+val generate_rand_list : int -> 'a list
+
 
 (** AUXILLIARY FUNCTION USED TO CREATE AN AVL FROM AN 'a LIST  *)
 val avl_rnd_create_aux : 'a list * 'a avl -> 'a avl
 
 (** THIS FUNCTION CREATES AN AVL FROM AN 'a LIST *)
 val avl_rnd_create : 'a list -> 'a avl
+
+(** THIS FUNCTION DISPLAYS AN AVL IN A FORM OF A STRING, IT IS USED FOR TESTING *)
+val avl_to_string : 'a avl -> string
