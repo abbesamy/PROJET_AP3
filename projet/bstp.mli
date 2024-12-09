@@ -1,5 +1,5 @@
 (*#directory "../utils";;*)
 
-#load "bst.cmo";;
+(*#load "bst.cmo";;*)
 open Bst;;
 
