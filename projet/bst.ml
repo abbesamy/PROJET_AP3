@@ -1,15 +1,24 @@
-(*#directory "../utils";;
+(* #directory "../utils";; *)
 
-#load "b_trees.cmo";;*)
+(* #load "b_trees.cmo";; *)
 open B_trees;;
 
 (** type for a binary search tree implemented with the module B_trees *)
 type 'a bst = 'a B_trees.b_trees;;
 
 
+(* Variables pour l'etude de la complexité *)
+let nb_calls_bst_seek: int ref = ref 0;;
+
+let get_nb_calls_bst_seek () : int = !nb_calls_bst_seek;;
+let reset_calls_bst_seek () : unit = 
+  nb_calls_bst_seek := 0
+;;
+
 (** checks the presence of a  value in a bst *)
 (** THIS FUNCTION CHECHKS IF AN ELEMENT 'v' IS PRESENT IN A BST 'abr' (RETURNS TRUE) OR NOT (RETURNS FALSE) *)
 let rec bst_seek(abr, v : ('a * int) bst * 'a) : bool =
+  nb_calls_bst_seek := !nb_calls_bst_seek + 1;
   if bt_isemptys(abr)
   then false
   else
@@ -21,6 +30,7 @@ let rec bst_seek(abr, v : ('a * int) bst * 'a) : bool =
       then bst_seek(bt_lefts(abr), v)
       else bst_seek(bt_rights(abr), v)
 ;;
+
 
 
 (** insertion of a value *)

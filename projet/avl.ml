@@ -1,8 +1,8 @@
 (** IMPORTS *)
 
-#load "bst.cmo";;
+(* #load "bst.cmo";; *)
 open Bst;;
-
+open B_trees;;
 
 (** TYPE DEFINITION *)
 
@@ -45,11 +45,18 @@ let avl_new_node_height(avl : 'a avl) : 'a avl =
 
 (****************** ROTATIONS  *********************)
 
+let nb_calls_rotations: int ref = ref 0;;
+let get_nb_calls_rotations () : int = !nb_calls_rotations;;
+let reset_calls_rotations () : unit = 
+  nb_calls_rotations:= 0
+;;
+
 (** RIGHT ROTATION *)
 let r_rot(avl : 'a avl) : 'a avl =
   if (bt_isemptys(avl) || bt_isemptys(bt_lefts(avl)))
   then failwith "empty avl or empty left avl in r_rot"
   else
+    nb_calls_rotations := !nb_calls_rotations + 1;
     let (rootval, lroot : ('a * int) * ('a * int)) = bt_roots(avl), bt_roots(bt_lefts(avl))in (** the roots to move *)
     let (lavl_l, ravl_l, ravl : 'a avl * 'a avl * 'a avl) = (** the avls to move *)
       bt_lefts(bt_lefts(avl)), bt_rights(bt_lefts(avl)), bt_rights(avl) in
@@ -63,6 +70,7 @@ let l_rot(avl : 'a avl) : 'a avl =
   if (bt_isemptys(avl) || bt_isemptys(bt_rights(avl)))
   then failwith "empty avl or empty right avl in l_rot"
   else
+    nb_calls_rotations := !nb_calls_rotations + 1;
     let (rootval, rroot : ('a * int) * ('a * int)) = bt_roots(avl), bt_roots(bt_rights(avl))in (** the roots to move *)
     let (lavl_r, ravl_r, lavl : 'a avl * 'a avl * 'a avl) = (** the avls to move *)
       bt_lefts(bt_rights(avl)), bt_rights(bt_rights(avl)), bt_lefts(avl) in
@@ -73,12 +81,14 @@ let l_rot(avl : 'a avl) : 'a avl =
 
 (** RIGHT of left ROTATION *)
 let lr_rot(avl : 'a avl) : 'a avl =
+  nb_calls_rotations := !nb_calls_rotations + 1;
   let (r, g, d) = bt_roots(avl), bt_lefts(avl), bt_rights(avl) in
   r_rot(avl_rooting(r, l_rot(g), d)) (** left rotation + right rotation *)
 ;;
 
 (** LEFT of right ROTATION *)
 let rl_rot(avl : 'a avl) : 'a avl =
+  nb_calls_rotations := !nb_calls_rotations + 1;
   let (r, g, d) = bt_roots(avl), bt_lefts(avl), bt_rights(avl) in
   l_rot(avl_rooting(r, g, r_rot(d))) (** right rotation + left rotation *)
 ;;
@@ -144,8 +154,16 @@ let rec avl_max_val(avl : 'a avl) : 'a =
       avl_max_val(bt_rights(avl))
 ;;
 
+
+(* Variables pour l'etude de la complexité *)
+let nb_calls_avl_delete_val: int ref = ref 0;;
+let get_nb_calls_avl_delete_val () : int = !nb_calls_avl_delete_val;;
+let reset_calls_avl_delete_val () : unit = 
+  nb_calls_avl_delete_val:= 0
+;;
 (** THIS FUNCTION DELETES THE ELEMENT WITH THE VALUE 'v' FROM AN AVL 'avl' *)
 let rec avl_delete_val(v, avl : 'a * 'a avl) : 'a avl =
+  nb_calls_avl_delete_val := !nb_calls_avl_delete_val + 1;
   if bt_isemptys(avl)
   then failwith "empty avl in avl_delete_val"
   else
@@ -178,8 +196,14 @@ let rec avl_delete_val(v, avl : 'a * 'a avl) : 'a avl =
                            d)))
 ;;
 
+let nb_calls_avl_insert_val: int ref = ref 0;;
+let get_nb_calls_avl_insert_val () : int = !nb_calls_avl_insert_val;;
+let reset_calls_avl_insert_val () : unit = 
+  nb_calls_avl_insert_val:= 0
+;;
 (** THIS FUNCTION INSERTS THE ELEMENT WITH THE VALUE 'v' IN AN AVL 'avl' *)
 let rec avl_insert_val(v, avl : 'a * 'a avl) : 'a avl =
+  nb_calls_avl_insert_val := !nb_calls_avl_insert_val+1;
   if bt_isemptys(avl)
   then avl_rooting((v, 0), bt_emptys(), bt_emptys())
   else
@@ -251,6 +275,12 @@ let avl_rnd_create(len : int) : 'a avl =
   let l : int list = generate_rand_list(len) in
   let t : 'a avl = avl_rooting((List.hd(l), 0), bt_emptys(), bt_emptys()) in
   avl_rnd_create_aux(List.tl(l), t)
+;;
+
+let avl_rnd_create_withListNodes(len : int) : 'a avl * int list =
+  let l : int list = generate_rand_list(len) in
+  let t : 'a avl = avl_rooting((List.hd(l), 0), bt_emptys(), bt_emptys()) in
+  (avl_rnd_create_aux(List.tl(l), t),  l)
 ;;
 
 (** THIS FUNCTION DISPLAYS AN AVL 'avl' IN A FORM OF A STRING, IT IS USED FOR TESTING *)

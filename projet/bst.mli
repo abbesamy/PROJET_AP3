@@ -58,3 +58,7 @@ val bst_isBst : 'a bst -> bool
 (** root insertion *)
 val bst_rinsert : 'a bst * 'a -> 'a bst
 (** THIS FUNCTION ADDS AN ELEMENT TO A BST AS A ROOT *)
+
+(*complexity*)
+val reset_calls_bst_seek : unit -> unit
+val get_nb_calls_bst_seek : unit -> int 

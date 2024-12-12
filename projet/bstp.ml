@@ -1,7 +1,8 @@
-(*#directory "../utils";;*)
-(*#load "bst.cmo";;*)
-(*#load "b_trees.cmo";;*)
+(* #directory "../utils";; *)
+(* #load "bst.cmo";; *)
+(* #load "b_trees.cmo";; *)
 open B_trees;;
+open Avl;;
 open Bst;;
 
 
@@ -145,8 +146,117 @@ let estimate_average_imbalance_descending (num_trees, size, max_value : int * in
 ;;
 
 (* Utilisation : *)
-let average_imbalance_ordered = estimate_average_imbalance_ordered (10000, 100, 100);;
+(* let average_imbalance_ordered = estimate_average_imbalance_ordered (10000, 100, 100);;
 print_endline ("Le déséquilibre moyen pour 10 000 arbres avec des listes ordonnées par ordre croissant est : " ^ string_of_float average_imbalance_ordered);;
 
 let average_imbalance_descending = estimate_average_imbalance_descending (10000, 100, 100);;
-print_endline ("Le déséquilibre moyen pour 10 000 arbres avec des listes ordonnées par ordre décroissantes est : " ^ string_of_float average_imbalance_descending);;
+print_endline ("Le déséquilibre moyen pour 10 000 arbres avec des listes ordonnées par ordre décroissantes est : " ^ string_of_float average_imbalance_descending);; *)
+
+(*EXERCICE 2 : 2.2)*)
+(* 1. Définissez une fonction avl_rnd_create qui crée des arbres AVL à partir de suites
+d’entiers aléatoires et vérifiez expérimentalement que les opérations de recherche,
+ d’insertion et de suppression ont bien une complexité en Θ(log n) où n est la taille de
+l’arbre. *)
+let rec check_complexity(arb, nodelist, s, d, i) =
+  match nodelist with
+  | [] -> (s, d, i) 
+  | hd :: tl ->
+    reset_calls_bst_seek();
+    avl_seek(hd, arb);
+    let seek_count = get_nb_calls_bst_seek() in
+
+    reset_calls_avl_delete_val();
+    avl_delete_val(hd, arb);
+    let delete_count = get_nb_calls_avl_delete_val() in
+
+    reset_calls_avl_insert_val();
+    avl_insert_val(hd, avl_delete_val(hd,arb));
+    let insert_count = get_nb_calls_avl_insert_val() in
+
+    check_complexity(arb, tl, s + seek_count, d + delete_count, i + insert_count)
+;;
+
+let average_calls_per_node (arb, nodelist : 'a avl * 'a list) : float*float*float =
+  let (total_seek, total_delete, total_insert) = check_complexity(arb, nodelist, 0, 0, 0) in
+  let n = float_of_int (List.length nodelist) in
+  (float_of_int total_seek /. n, float_of_int total_delete /. n, float_of_int total_insert /. n)
+;;
+
+
+let rec process_sizes(sizes : int list) : unit =
+  match sizes with
+  | [] -> ()
+  | size :: rest ->
+    let (arb, nodelist) = avl_rnd_create_withListNodes(size) in
+    let (avg_seek, avg_delete, avg_insert) = average_calls_per_node (arb, nodelist) in
+    Printf.printf 
+      "Taille: %d, Nombre d'appels moyens - Recherche: %f, Suppression: %f, Insertion: %f\n"
+      size avg_seek avg_delete avg_insert;
+    process_sizes (rest) 
+;;
+
+
+let sizes = [10; 100; 1000; 10000] in
+process_sizes sizes;;
+
+
+
+(* 2. En créant des arbres AVL avec des suites de nombres entiers qui contiennent des sous
+suites ordonnées de longueur variable (2), estimez le nombre moyen de rotations qui sont
+effectuées pour garder l’arbre équilibré. Comment ce nombre évolue-t-il en fonction de
+la taille de l’arbre ? *)
+
+let rec generate_ordered_sublist(n, k : int *int) : int list  =
+  if k = 0 then [] else n :: generate_ordered_sublist (n + 1, k - 1)
+;;
+
+let rec generate_random_list (n : int) : int list =
+  if n = 0 then [] else Random.int 1000 :: generate_random_list (n - 1)
+;;
+
+let generate_test_list (size ,  k : int * int) : int list =
+  if k > size then failwith "Sous-suite  trop grande pour la taille de la liste";
+  let ordered_part = generate_ordered_sublist (1, k) in
+  let random_part = generate_random_list (size - k) in
+  ordered_part @ random_part
+;;
+
+let rec insert_and_count_rotations (arb, lst, total_rotations : 'a avl * int list * int) : int =
+  match lst with
+  | [] -> total_rotations
+  | hd :: tl ->
+    reset_calls_rotations(); 
+    let arb = avl_insert_val(hd, arb) in 
+    let current_rotations = get_nb_calls_rotations() in
+    insert_and_count_rotations(arb, tl, (total_rotations + current_rotations))
+;;
+
+let average_rotations_per_node (size, k : int * int) : float =
+  let test_list = generate_test_list(size, k) in
+  let arb = bt_emptys() in 
+  let total_rotations = insert_and_count_rotations (arb, test_list, 0) in
+  float_of_int (total_rotations) /. float_of_int (size)
+;;
+
+
+
+let rec process_k_values (sizes, k_values : int list*int list) : unit =
+  match sizes with
+  | [] -> () 
+  | size :: rest_sizes ->
+    let rec process_sizes (k_values : int list) : unit =
+      match k_values with
+      | [] -> () 
+      | k :: rest_k_values ->
+        let avg_rotations = average_rotations_per_node (size, k) in
+        Printf.printf 
+        "Taille: %d, Sous-suite ordonnée: %d, Rotations moyennes: %f\n"
+          size k avg_rotations;
+        process_sizes (rest_k_values) 
+    in
+    process_sizes (k_values); 
+    process_k_values (rest_sizes, k_values) 
+
+let sizes = [100; 1000; 10000;100000];;
+let k_values = [2; 5; 10; 50];;
+process_k_values (sizes, k_values);;

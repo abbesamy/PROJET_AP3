@@ -62,7 +62,8 @@ val avl_delete_val : 'a * 'a avl -> 'a avl
 val avl_insert_val : 'a * 'a avl -> 'a avl
 
 (** THIS FUNCTION CHECKS IF AN ELEMENT IS PRESENT IN AN AVL  *)
-val seek_avl : 'a * 'a avl -> bool
+(* val seek_avl : 'a * 'a avl -> bool *)
+val avl_seek : 'a * 'a avl -> bool
 
 
 
@@ -75,14 +76,26 @@ val seek_avl : 'a * 'a avl -> bool
 val generate_rand_list_aux : int * int list -> int list
 
 (** THIS FUNCTION GENERATES AN INT LIST *)
-val generate_rand_list : int -> 'a list
+(* val generate_rand_list : int -> 'a list *)
+val generate_rand_list : int -> int list (*++*)
 
 
 (** AUXILLIARY FUNCTION USED TO CREATE AN AVL FROM AN 'a LIST  *)
 val avl_rnd_create_aux : 'a list * 'a avl -> 'a avl
 
 (** THIS FUNCTION CREATES AN AVL FROM AN 'a LIST *)
-val avl_rnd_create : 'a list -> 'a avl
-
+(* val avl_rnd_create : 'a list -> 'a avl *)
+(*++ fige*)
+val avl_rnd_create : int -> int avl
+val avl_rnd_create_withListNodes : int -> int avl *int list
 (** THIS FUNCTION DISPLAYS AN AVL IN A FORM OF A STRING, IT IS USED FOR TESTING *)
-val avl_to_string : 'a avl -> string
+(* val avl_to_string : 'a avl -> string *)
+val avl_to_string : int avl -> string
+
+val get_nb_calls_avl_delete_val : unit -> int 
+val get_nb_calls_avl_insert_val : unit -> int
+val get_nb_calls_rotations : unit -> int
+
+val reset_calls_avl_insert_val : unit -> unit
+val reset_calls_avl_delete_val : unit -> unit
+val reset_calls_rotations: unit -> unit
