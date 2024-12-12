@@ -162,7 +162,7 @@ let rec check_complexity(arb, nodelist, s, d, i : 'a avl *int list *int*int*int)
   match nodelist with
   | [] -> (s, d, i) 
   | hd :: tl ->
-    reset_calls_bst_seek(); (*remise à 0 du compteur du nombre d'appels de la fonction bst_seek(utilisé aussi pour les avl)*)
+    reset_calls_bst_seek(); (*remise à 0 du compteur du nombre d'appels de la fonction bst_seek(utilisé aussi pour la recherce dans les avl)*)
     avl_seek(hd, arb);
     let seek_count = get_nb_calls_bst_seek() in (*obtenir le nombre d'appels de la fonction bst_seek*)
 
