@@ -157,13 +157,14 @@ print_endline ("Le déséquilibre moyen pour 10 000 arbres avec des listes ordon
 d’entiers aléatoires et vérifiez expérimentalement que les opérations de recherche,
  d’insertion et de suppression ont bien une complexité en Θ(log n) où n est la taille de
 l’arbre. *)
+
 let rec check_complexity(arb, nodelist, s, d, i : 'a avl *int list *int*int*int):int*int*int =
   match nodelist with
   | [] -> (s, d, i) 
   | hd :: tl ->
     reset_calls_bst_seek(); (*remise à 0 du compteur du nombre d'appels de la fonction bst_seek(utilisé aussi pour les avl)*)
     avl_seek(hd, arb);
-    let seek_count = get_nb_calls_bst_seek() in
+    let seek_count = get_nb_calls_bst_seek() in (*obtenir le nombre d'appels de la fonction bst_seek*)
 
     reset_calls_avl_delete_val();
     avl_delete_val(hd, arb);
