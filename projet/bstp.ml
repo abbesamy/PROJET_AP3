@@ -146,18 +146,18 @@ let estimate_average_imbalance_descending (num_trees, size, max_value : int * in
 ;;
 
 (* Utilisation : *)
-(* let average_imbalance_ordered = estimate_average_imbalance_ordered (10000, 100, 100);;
+let average_imbalance_ordered = estimate_average_imbalance_ordered (10000, 100, 100);;
 print_endline ("Le déséquilibre moyen pour 10 000 arbres avec des listes ordonnées par ordre croissant est : " ^ string_of_float average_imbalance_ordered);;
 
 let average_imbalance_descending = estimate_average_imbalance_descending (10000, 100, 100);;
-print_endline ("Le déséquilibre moyen pour 10 000 arbres avec des listes ordonnées par ordre décroissantes est : " ^ string_of_float average_imbalance_descending);; *)
+print_endline ("Le déséquilibre moyen pour 10 000 arbres avec des listes ordonnées par ordre décroissantes est : " ^ string_of_float average_imbalance_descending);;
 
 (*EXERCICE 2 : 2.2)*)
 (* 1. Définissez une fonction avl_rnd_create qui crée des arbres AVL à partir de suites
 d’entiers aléatoires et vérifiez expérimentalement que les opérations de recherche,
  d’insertion et de suppression ont bien une complexité en Θ(log n) où n est la taille de
 l’arbre. *)
-let rec check_complexity(arb, nodelist, s, d, i) =
+let rec check_complexity(arb, nodelist, s, d, i : 'a avl *int list *int*int*int):int*int*int =
   match nodelist with
   | [] -> (s, d, i) 
   | hd :: tl ->
