@@ -260,5 +260,5 @@ let rec process_k_values (sizes, k_values : int list*int list) : unit =
     process_k_values (rest_sizes, k_values) 
 
 let sizes = [100; 1000; 10000;100000];;
-let k_values = [2; 5; 10; 50];;
+let k_values = [2; 5; 10; 50];; (*Longueur des sous-suites croissantes *)
 process_k_values (sizes, k_values);;
