@@ -161,7 +161,7 @@ let rec check_complexity(arb, nodelist, s, d, i : 'a avl *int list *int*int*int)
   match nodelist with
   | [] -> (s, d, i) 
   | hd :: tl ->
-    reset_calls_bst_seek();
+    reset_calls_bst_seek(); (*remise à 0 du compteur du nombre d'appels de la fonction bst_seek(utilisé aussi pour les avl)*)
     avl_seek(hd, arb);
     let seek_count = get_nb_calls_bst_seek() in
 
@@ -205,6 +205,7 @@ process_sizes sizes;;
 suites ordonnées de longueur variable (2), estimez le nombre moyen de rotations qui sont
 effectuées pour garder l’arbre équilibré. Comment ce nombre évolue-t-il en fonction de
 la taille de l’arbre ? *)
+
 
 let rec generate_ordered_sublist(n, k : int *int) : int list  =
   if k = 0 then [] else n :: generate_ordered_sublist (n + 1, k - 1)
